@@ -1,0 +1,396 @@
+{
+  "entities": {
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Private player account profile, PII, and authoritative wallet balances.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "playerCode": { "type": "string", "maxLength": 24, "pattern": "^VYN-[A-Z0-9]{4,12}$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "ffUid": { "type": "string", "minLength": 5, "maxLength": 20, "pattern": "^[0-9]{5,20}$" },
+        "avatarUrl": { "type": "string", "maxLength": 450000 },
+        "walletBalance": { "type": "number" },
+        "totalEarnings": { "type": "number" },
+        "totalKillRewards": { "type": "number" },
+        "totalWithdrawals": { "type": "number" },
+        "pendingWithdrawals": { "type": "number" },
+        "isBanned": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["player", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "playerCode", "ign", "ffUid", "walletBalance", "totalEarnings", "totalKillRewards", "totalWithdrawals", "pendingWithdrawals", "isBanned", "role", "createdAt", "updatedAt"]
+    },
+    "PlayerPublic": {
+      "title": "PlayerPublic",
+      "description": "Publicly visible non-PII player stats for leaderboards and match history.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "playerCode": { "type": "string", "maxLength": 24, "pattern": "^VYN-[A-Z0-9]{4,12}$" },
+        "ign": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "ffUid": { "type": "string", "minLength": 5, "maxLength": 20, "pattern": "^[0-9]{5,20}$" },
+        "avatarUrl": { "type": "string", "maxLength": 450000 },
+        "totalKills": { "type": "number" },
+        "totalEarnings": { "type": "number" },
+        "matchesPlayed": { "type": "number" },
+        "booyahs": { "type": "number" },
+        "isBanned": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "playerCode", "ign", "ffUid", "totalKills", "totalEarnings", "matchesPlayed", "booyahs", "isBanned", "createdAt", "updatedAt"]
+    },
+    "AdminDoc": {
+      "title": "AdminDoc",
+      "description": "Authorized admin record.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 200 },
+        "grantedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "grantedAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "Global tournament economy, UPI payment settings, and default rules.",
+      "type": "object",
+      "properties": {
+        "defaultEntryFee": { "type": "number" },
+        "perKillReward": { "type": "number" },
+        "minWithdrawal": { "type": "number" },
+        "upiId": { "type": "string", "maxLength": 100 },
+        "upiQrUrl": { "type": "string", "maxLength": 450000 },
+        "defaultRules": { "type": "array" },
+        "maintenanceMode": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["defaultEntryFee", "perKillReward", "minWithdrawal", "upiId", "defaultRules", "maintenanceMode", "updatedAt"]
+    },
+    "Tournament": {
+      "title": "Tournament",
+      "description": "Free Fire Solo tournament metadata without secret room credentials.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "matchDate": { "type": "string", "maxLength": 30 },
+        "startTime": { "type": "string", "maxLength": 30 },
+        "regCloseTime": { "type": "string", "maxLength": 40 },
+        "roomReleaseTime": { "type": "string", "maxLength": 40 },
+        "format": { "type": "string", "maxLength": 40 },
+        "map": { "type": "string", "enum": ["Bermuda", "Purgatory", "Kalahari", "Alpine", "Nextera"] },
+        "maxSlots": { "type": "number" },
+        "filledSlots": { "type": "number" },
+        "entryFee": { "type": "number" },
+        "perKillReward": { "type": "number" },
+        "prizePool": { "type": "number" },
+        "booyahPrize": { "type": "number" },
+        "rules": { "type": "array" },
+        "status": { "type": "string", "enum": ["Upcoming", "Registration Open", "Registration Closed", "Room Details Released", "Live", "Completed", "Cancelled"] },
+        "announcement": { "type": "string", "maxLength": 500 },
+        "resultsPublished": { "type": "boolean" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "matchDate", "startTime", "regCloseTime", "roomReleaseTime", "format", "map", "maxSlots", "filledSlots", "entryFee", "perKillReward", "prizePool", "rules", "status", "resultsPublished", "createdBy", "createdAt", "updatedAt"]
+    },
+    "RoomSecret": {
+      "title": "RoomSecret",
+      "description": "Protected custom room ID and password revealed only to approved players at release time.",
+      "type": "object",
+      "properties": {
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "roomId": { "type": "string", "minLength": 2, "maxLength": 64 },
+        "roomPassword": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "matchDate": { "type": "string", "maxLength": 30 },
+        "matchTime": { "type": "string", "maxLength": 30 },
+        "mapName": { "type": "string", "maxLength": 40 },
+        "mode": { "type": "string", "maxLength": 40 },
+        "maxPlayers": { "type": "number" },
+        "releaseTimestamp": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["tournamentId", "roomId", "roomPassword", "matchDate", "matchTime", "mapName", "mode", "maxPlayers", "releaseTimestamp", "updatedAt"]
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "Player tournament entry and manual UPI payment verification record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 260 },
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "tournamentTitle": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "playerCode": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "maxLength": 40 },
+        "ffUid": { "type": "string", "maxLength": 20 },
+        "entryFee": { "type": "number" },
+        "utrNumber": { "type": "string", "minLength": 6, "maxLength": 40, "pattern": "^[A-Za-z0-9\\-_]{6,40}$" },
+        "screenshotData": { "type": "string", "maxLength": 450000 },
+        "paymentStatus": { "type": "string", "enum": ["Pending", "Approved", "Rejected"] },
+        "slotConfirmed": { "type": "boolean" },
+        "rejectionReason": { "type": "string", "maxLength": 300 },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "tournamentId", "tournamentTitle", "userId", "playerCode", "ign", "ffUid", "entryFee", "utrNumber", "screenshotData", "paymentStatus", "slotConfirmed", "createdAt", "updatedAt"]
+    },
+    "UsedUtr": {
+      "title": "UsedUtr",
+      "description": "Uniqueness lock document preventing duplicate UTR submissions.",
+      "type": "object",
+      "properties": {
+        "utrNumber": { "type": "string", "maxLength": 40 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "registrationId": { "type": "string", "maxLength": 260 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["utrNumber", "userId", "registrationId", "createdAt"]
+    },
+    "KillClaim": {
+      "title": "KillClaim",
+      "description": "Player-submitted match kill proof requiring admin verification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 260 },
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "tournamentTitle": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "playerCode": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "maxLength": 40 },
+        "ffUid": { "type": "string", "maxLength": 20 },
+        "claimedKills": { "type": "number" },
+        "verifiedKills": { "type": "number" },
+        "perKillReward": { "type": "number" },
+        "totalReward": { "type": "number" },
+        "screenshotData": { "type": "string", "maxLength": 450000 },
+        "notes": { "type": "string", "maxLength": 300 },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected"] },
+        "rejectionReason": { "type": "string", "maxLength": 300 },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "tournamentId", "tournamentTitle", "userId", "playerCode", "ign", "ffUid", "claimedKills", "verifiedKills", "perKillReward", "totalReward", "screenshotData", "status", "createdAt", "updatedAt"]
+    },
+    "WalletTransaction": {
+      "title": "WalletTransaction",
+      "description": "Immutable financial ledger record for wallet credits and debits.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "txCode": { "type": "string", "maxLength": 40 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["kill_reward", "booyah_prize", "withdrawal_paid", "admin_adjustment"] },
+        "direction": { "type": "string", "enum": ["credit", "debit"] },
+        "amount": { "type": "number" },
+        "balanceAfter": { "type": "number" },
+        "referenceId": { "type": "string", "maxLength": 260 },
+        "description": { "type": "string", "maxLength": 250 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "txCode", "userId", "type", "direction", "amount", "balanceAfter", "referenceId", "description", "createdBy", "createdAt"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Player UPI withdrawal request and admin manual payout record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "playerCode": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "maxLength": 40 },
+        "amount": { "type": "number" },
+        "upiId": { "type": "string", "minLength": 4, "maxLength": 100 },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected", "Paid"] },
+        "payoutUtr": { "type": "string", "maxLength": 60 },
+        "rejectionReason": { "type": "string", "maxLength": 300 },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "playerCode", "ign", "amount", "upiId", "status", "createdAt", "updatedAt"]
+    },
+    "ActiveWithdrawal": {
+      "title": "ActiveWithdrawal",
+      "description": "Uniqueness lock preventing duplicate concurrent withdrawal requests.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "withdrawalId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "withdrawalId", "createdAt"]
+    },
+    "TournamentResult": {
+      "title": "TournamentResult",
+      "description": "Admin-verified final match placement and kill payout record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 260 },
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "tournamentTitle": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "playerCode": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "maxLength": 40 },
+        "ffUid": { "type": "string", "maxLength": 20 },
+        "rank": { "type": "number" },
+        "kills": { "type": "number" },
+        "killReward": { "type": "number" },
+        "placementPrize": { "type": "number" },
+        "totalWon": { "type": "number" },
+        "publishedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "tournamentId", "tournamentTitle", "userId", "playerCode", "ign", "ffUid", "rank", "kills", "killReward", "placementPrize", "totalWon", "publishedBy", "createdAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Public tournament announcements published by admin.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "message": { "type": "string", "minLength": 2, "maxLength": 600 },
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["general", "tournament", "room_release", "result"] },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "message", "type", "createdBy", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Targeted user notification record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 120 },
+        "message": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string", "enum": ["registration", "payment", "room", "tournament", "result", "kill_reward", "withdrawal", "system"] },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "category", "isRead", "createdAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Player dispute, cheater report, or support inquiry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "playerCode": { "type": "string", "maxLength": 24 },
+        "ign": { "type": "string", "maxLength": 40 },
+        "tournamentId": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "enum": ["payment_dispute", "kill_dispute", "cheater_report", "withdrawal_issue", "account_support"] },
+        "subject": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 5, "maxLength": 1000 },
+        "evidenceData": { "type": "string", "maxLength": 450000 },
+        "status": { "type": "string", "enum": ["Open", "In Review", "Resolved", "Closed"] },
+        "adminReply": { "type": "string", "maxLength": 1000 },
+        "resolvedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "playerCode", "ign", "category", "subject", "description", "status", "createdAt", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable financial and administrative audit log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 80 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 200 },
+        "targetUserId": { "type": "string", "maxLength": 128 },
+        "referenceId": { "type": "string", "maxLength": 260 },
+        "amount": { "type": "number" },
+        "details": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "action", "actorUid", "actorEmail", "targetUserId", "referenceId", "amount", "details", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserPrivate" },
+      "description": "Private user PII and wallet balance records."
+    },
+    "/players_public/{userId}": {
+      "schema": { "$ref": "#/entities/PlayerPublic" },
+      "description": "Public leaderboard player profiles without PII."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminDoc" },
+      "description": "Authorized admin identities."
+    },
+    "/settings/{docId}": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Global platform configuration."
+    },
+    "/tournaments/{tournamentId}": {
+      "schema": { "$ref": "#/entities/Tournament" },
+      "description": "Public tournament listings and schedules."
+    },
+    "/tournaments/{tournamentId}/room_secrets/{secretId}": {
+      "schema": { "$ref": "#/entities/RoomSecret" },
+      "description": "Protected room ID and password gated by approved registration and release time."
+    },
+    "/registrations/{regId}": {
+      "schema": { "$ref": "#/entities/Registration" },
+      "description": "Tournament registrations and UPI UTR payment proofs."
+    },
+    "/used_utrs/{utrId}": {
+      "schema": { "$ref": "#/entities/UsedUtr" },
+      "description": "Unique UTR index preventing duplicate payment submissions."
+    },
+    "/kill_claims/{claimId}": {
+      "schema": { "$ref": "#/entities/KillClaim" },
+      "description": "Match kill verification claims."
+    },
+    "/wallet_transactions/{txId}": {
+      "schema": { "$ref": "#/entities/WalletTransaction" },
+      "description": "Immutable wallet credit and debit ledger."
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": { "$ref": "#/entities/Withdrawal" },
+      "description": "UPI withdrawal requests and manual payout records."
+    },
+    "/active_withdrawals/{userId}": {
+      "schema": { "$ref": "#/entities/ActiveWithdrawal" },
+      "description": "Concurrency lock preventing duplicate withdrawal requests."
+    },
+    "/tournament_results/{resultId}": {
+      "schema": { "$ref": "#/entities/TournamentResult" },
+      "description": "Published tournament leaderboard results."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Admin announcements."
+    },
+    "/notifications/{notifId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Private per-user notifications."
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Support inquiries and match disputes."
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable admin financial audit logs."
+    }
+  }
+}

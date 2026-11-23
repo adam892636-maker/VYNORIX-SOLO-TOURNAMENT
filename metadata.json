@@ -1,0 +1,6 @@
+{
+  "name": "Vynorix Solo Tournament",
+  "description": "Competitive Free Fire Solo custom room tournament platform with verified UPI registration, protected room credentials, verified per-kill wallet rewards, and live leaderboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
